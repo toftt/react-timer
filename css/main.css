@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+#main {
+  max-width: 550px;
+  margin: 50px auto;
+}
+
+#timer {
+  align-items: center;
+  color: #FFA500;
+  display: flex;
+  font-size: 40px;
+  height: 70px;
+  justify-content: center;
+}
+
+#task_editor {
+  border-top: 3px solid #FFA500;
+  border-left: 3px solid #FFA500;
+  box-sizing: border-box;
+  color: #FFA500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+}
+
+#editor_label {
+  border-top: 3px solid #FFA500;
+  border-left: 3px solid #FFA500;
+  border-right: 3px solid #FFA500;
+  box-sizing: border-box;
+  color: #FFA500;
+  cursor: default;
+  display: inline-block;
+  padding: 5px;
+  #margin-left: 10px;
+  margin-top: 30px;
+  text-transform: uppercase;
+}
+
+.outer-bar {
+  background-color: white;
+  border: 3px solid #FFA500;
+  box-sizing: border-box;
+  height: 30px;
+  margin: 5px 0;
+}
+
+.inner-bar {
+  background-color: #FFB939;
+  box-sizing: border-box;
+  height: 24px;
+  position: absolute;
+}
+
+.bar-text {
+  align-items: center;
+  box-sizing: border-box;
+  cursor: default;
+  display: flex;
+  height: 24px;
+  justify-content: space-between;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding-left: 4px;
+  padding-right: 4px;
+  position: absolute;
+  z-index: 3;
+}
+
+.btn {
+  background-color: white;
+  border: 3px solid #FFA500;
+  box-sizing: border-box;
+  color: #FFA500;
+  font-size: 40px;
+  height: 70px;
+  outline: none;
+  text-transform: uppercase;
+  width: 30%;
+}
+
+.btn-small {
+  font-size: 20px;
+  height: 30px;
+}
+
+.btn:hover {
+  background-color: #FFA500;
+  color: white;
+}
+
+.btn-holder {
+  display: flex;
+  justify-content: space-between;
+}
+
+input {
+  border: none;
+  border-bottom: 3px solid #FFA500;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+.bar-holder {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.material-icons {
+  color: #FFA500;
+}
