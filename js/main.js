@@ -29,7 +29,7 @@ class TimerApp extends React.Component {
               <label for="taskname">Task name</label>
               <input name="nameText"onChange={this.handleNameChange} value={this.state.nameText} />
               <label for="duration">Duration in seconds</label>
-              <input name="durationText"onChange={this.handleDurationChange} value={this.state.durationText} />
+              <input name="durationText" autoComplete="off" onChange={this.handleDurationChange} value={this.state.durationText}/>
               <button className="btn btn-small">add</button>
             </div>
           </form>
