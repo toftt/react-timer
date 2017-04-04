@@ -8,7 +8,7 @@ class TimerApp extends React.Component {
     this.handleReset = this.handleReset.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.maxDuration = 460;
-    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
+    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now(), edit: false}], nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
   }
 
   render() {
@@ -22,18 +22,7 @@ class TimerApp extends React.Component {
           <Timer elapsed={this.state.elapsed} />
         </div>
         <TaskList items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete}/>
-        <div style={{display: this.state.on ? 'none' : 'block'}}>
-          <div id="editor_label">add task</div>
-          <form onSubmit={this.handleSubmit}>
-            <div id="task_editor">
-              <label for="taskname">Task name</label>
-              <input name="nameText"onChange={this.handleNameChange} value={this.state.nameText} />
-              <label for="duration">Duration in seconds</label>
-              <input name="durationText" autoComplete="off" onChange={this.handleDurationChange} value={this.state.durationText}/>
-              <button className="btn btn-small">add</button>
-            </div>
-          </form>
-        </div>
+        <TaskEditor on={this.state.on} handleSubmit={this.handleSubmit} handleNameChange={this.handleNameChange} nameText={this.state.nameText} handleDurationChange={this.handleDurationChange} durationText={this.state.durationText}/>
       </div>
     );
   }
@@ -93,7 +82,8 @@ class TimerApp extends React.Component {
         name: this.state.nameText,
         duration: parseInt(this.state.durationText) * 40,
         progress: 0,
-        id: Date.now()
+        id: Date.now(),
+        edit: false
       };
 
       const newScalar = Math.min(this.maxDuration / newItem.duration, this.state.scalar);
@@ -106,6 +96,23 @@ class TimerApp extends React.Component {
       }));
     }
   }
+}
+
+function TaskEditor(props) {
+  return (
+    <div style={{display: props.on ? 'none' : 'block'}}>
+      <div id="editor_label">add task</div>
+      <form onSubmit={props.handleSubmit}>
+        <div id="task_editor">
+          <label for="taskname">Task name</label>
+          <input name="nameText" onChange={props.handleNameChange} value={props.nameText} />
+          <label for="duration">Duration in seconds</label>
+          <input name="durationText" autoComplete="off" onChange={props.handleDurationChange} value={props.durationText}/>
+          <button className="btn btn-small">add</button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 function TaskList(props) {
