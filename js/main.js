@@ -8,7 +8,7 @@ class TimerApp extends React.Component {
     this.handleReset = this.handleReset.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.maxDuration = 460;
-    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now(), edit: false}], nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
+    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
   }
 
   render() {
@@ -82,8 +82,7 @@ class TimerApp extends React.Component {
         name: this.state.nameText,
         duration: parseInt(this.state.durationText) * 40,
         progress: 0,
-        id: Date.now(),
-        edit: false
+        id: Date.now()
       };
 
       const newScalar = Math.min(this.maxDuration / newItem.duration, this.state.scalar);
