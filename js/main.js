@@ -21,7 +21,7 @@ class TimerApp extends React.Component {
         <div id="timer">
           <Timer elapsed={this.state.elapsed} />
         </div>
-        <TaskList items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete}/>
+        <TaskList on={this.state.on} items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete}/>
         <TaskEditor on={this.state.on} handleSubmit={this.handleSubmit} handleNameChange={this.handleNameChange} nameText={this.state.nameText} handleDurationChange={this.handleDurationChange} durationText={this.state.durationText}/>
       </div>
     );
@@ -124,7 +124,7 @@ function TaskList(props) {
           let duration = item.duration * props.scalar;
           let progress = ratio * (duration - 6);
           return (
-            <BarHolder duration={duration} progress={progress} text={item.name} handleDelete={props.handleDelete} itemid={item.id}/>
+            <BarHolder on={props.on} duration={duration} progress={progress} text={item.name} handleDelete={props.handleDelete} itemid={item.id}/>
           )
         })
       }
@@ -146,8 +146,8 @@ class BarHolder extends React.Component {
       <div className="bar-holder" onMouseEnter={this.handleEnter} onMouseLeave={this.handleLeave}>
         <Bar duration={this.props.duration} progress={this.props.progress} text={this.props.text} />
         <span>
-          <i className="icon material-icons" style={{display: this.state.hover ? 'inline' : 'none'}}>mode_edit</i>
-          <i className="icon material-icons" onClick={this._onClick} style={{display: this.state.hover ? 'inline' : 'none'}}>delete</i>
+          <i className="icon material-icons" style={{display: this.state.hover && !this.props.on ? 'inline' : 'none'}}>mode_edit</i>
+          <i className="icon material-icons" onClick={this._onClick} style={{display: this.state.hover && !this.props.on ? 'inline' : 'none'}}>delete</i>
         </span>
       </div>
     )
