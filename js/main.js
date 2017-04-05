@@ -1,14 +1,17 @@
 class TimerApp extends React.Component {
   constructor(props) {
     super(props);
+
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDurationChange = this.handleDurationChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleEditSelection = this.handleEditSelection.bind(this);
+
     this.maxDuration = 460;
-    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
+    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], editItem: null, nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
   }
 
   render() {
@@ -21,7 +24,7 @@ class TimerApp extends React.Component {
         <div id="timer">
           <Timer elapsed={this.state.elapsed} />
         </div>
-        <TaskList on={this.state.on} items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete}/>
+        <TaskList on={this.state.on} items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete} handleEditSelection={this.handleEditSelection} />
         <TaskEditor on={this.state.on} handleSubmit={this.handleSubmit} handleNameChange={this.handleNameChange} nameText={this.state.nameText} handleDurationChange={this.handleDurationChange} durationText={this.state.durationText}/>
       </div>
     );
@@ -37,6 +40,13 @@ class TimerApp extends React.Component {
   handleDelete(id) {
     this.setState((prevState) => ({
       items: deleteItem(prevState.items, id)
+    }));
+  }
+
+  handleEditSelection(id) {
+    console.log(id);
+    this.setState((prevState) => ({
+      editItem: id
     }));
   }
 
@@ -123,7 +133,7 @@ function TaskList(props) {
           let duration = item.duration * props.scalar;
           let progress = ratio * (duration - 6);
           return (
-            <BarHolder on={props.on} duration={duration} progress={progress} text={item.name} handleDelete={props.handleDelete} itemid={item.id}/>
+            <BarHolder on={props.on} duration={duration} progress={progress} text={item.name} handleDelete={props.handleDelete} handleEditSelection={props.handleEditSelection} itemid={item.id}/>
           )
         })
       }
@@ -135,9 +145,11 @@ class BarHolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {hover: false};
+
     this.handleEnter = this.handleEnter.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this._onClick = this._onClick.bind(this);
+    this.handleEditSelection = this.handleEditSelection.bind(this);
   }
 
   render() {
@@ -145,7 +157,7 @@ class BarHolder extends React.Component {
       <div className="bar-holder" onMouseEnter={this.handleEnter} onMouseLeave={this.handleLeave}>
         <Bar duration={this.props.duration} progress={this.props.progress} text={this.props.text} />
         <span>
-          <i className="icon material-icons" style={{display: this.state.hover && !this.props.on ? 'inline' : 'none'}}>mode_edit</i>
+          <i className="icon material-icons" onClick={this.handleEditSelection} style={{display: this.state.hover && !this.props.on ? 'inline' : 'none'}}>mode_edit</i>
           <i className="icon material-icons" onClick={this._onClick} style={{display: this.state.hover && !this.props.on ? 'inline' : 'none'}}>delete</i>
         </span>
       </div>
@@ -154,6 +166,10 @@ class BarHolder extends React.Component {
 
   _onClick() {
     this.props.handleDelete(this.props.itemid);
+  }
+
+  handleEditSelection() {
+    this.props.handleEditSelection(this.props.itemid);
   }
 
   handleEnter() {
