@@ -9,9 +9,11 @@ class TimerApp extends React.Component {
     this.handleReset = this.handleReset.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEditSelection = this.handleEditSelection.bind(this);
+    this.getItem = this.getItem.bind(this);
+    this.handleEditCancel = this.handleEditCancel.bind(this);
 
     this.maxDuration = 460;
-    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], editItem: null, nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
+    this.state = {items: [{name: 'test', duration: 1 * 40, progress: 0, id: Date.now()}], edit: false, editItemId: null, nameText: '', durationText: '', on: false, elapsed: 0, scalar: 10.0};
   }
 
   render() {
@@ -25,7 +27,7 @@ class TimerApp extends React.Component {
           <Timer elapsed={this.state.elapsed} />
         </div>
         <TaskList on={this.state.on} items={this.state.items} scalar={this.state.scalar} maxDuration={this.maxDuration} handleDelete={this.handleDelete} handleEditSelection={this.handleEditSelection} />
-        <TaskEditor on={this.state.on} handleSubmit={this.handleSubmit} handleNameChange={this.handleNameChange} nameText={this.state.nameText} handleDurationChange={this.handleDurationChange} durationText={this.state.durationText}/>
+        <TaskEditor on={this.state.on} edit={this.state.edit} handleEditCancel={this.handleEditCancel} handleSubmit={this.handleSubmit} handleNameChange={this.handleNameChange} nameText={this.state.nameText} handleDurationChange={this.handleDurationChange} durationText={this.state.durationText}/>
       </div>
     );
   }
@@ -37,16 +39,36 @@ class TimerApp extends React.Component {
     }));
   }
 
+  getItem(id) {
+    for (let item of this.state.items) {
+      if (item.id === id) return item;
+    }
+    return null;
+  }
+
   handleDelete(id) {
     this.setState((prevState) => ({
       items: updateProgress(deleteItem(prevState.items, id), prevState.elapsed)
     }));
   }
 
+  handleEditCancel(e) {
+    e.preventDefault();
+    this.setState({
+      durationText: '',
+      edit: false,
+      editItemId: null,
+      nameText: ''
+    });
+  }
+
   handleEditSelection(id) {
-    console.log(id);
+    let item = this.getItem(id);
     this.setState((prevState) => ({
-      editItem: id
+      durationText: item.duration,
+      edit: true,
+      editItemId: id,
+      nameText: item.name
     }));
   }
 
@@ -95,11 +117,15 @@ class TimerApp extends React.Component {
         id: Date.now()
       };
 
+      if (this.state.edit) newItem.id = this.state.editItemId;
+
       const newScalar = Math.min(this.maxDuration / newItem.duration, this.state.scalar);
 
       this.setState((prevState) => ({
         durationText: '',
-        items: prevState.items.concat(newItem),
+        edit: false,
+        editItemId: null,
+        items: updateProgress(deleteItem(prevState.items, this.state.editItemId).concat(newItem), prevState.elapsed),
         scalar: newScalar,
         nameText: ''
       }));
@@ -110,14 +136,17 @@ class TimerApp extends React.Component {
 function TaskEditor(props) {
   return (
     <div style={{display: props.on ? 'none' : 'block'}}>
-      <div id="editor_label">add task</div>
+      <div id="editor_label">{!props.edit ? 'add task' : 'edit task'}</div>
       <form onSubmit={props.handleSubmit}>
         <div id="task_editor">
           <label for="taskname">Task name</label>
           <input name="nameText" onChange={props.handleNameChange} value={props.nameText} />
           <label for="duration">Duration in seconds</label>
           <input name="durationText" autoComplete="off" onChange={props.handleDurationChange} value={props.durationText}/>
-          <button className="btn btn-small">add</button>
+          <div>
+            <button className="btn btn-small">{!props.edit ? 'add' : 'save'}</button>
+            <button onClick={props.handleEditCancel} style={{display: !props.edit ? 'none' : 'inline'}} className="btn btn-small">cancel</button>
+          </div>
         </div>
       </form>
     </div>
