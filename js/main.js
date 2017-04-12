@@ -39,7 +39,7 @@ class TimerApp extends React.Component {
 
   handleDelete(id) {
     this.setState((prevState) => ({
-      items: deleteItem(prevState.items, id)
+      items: updateProgress(deleteItem(prevState.items, id), prevState.elapsed)
     }));
   }
 
